@@ -1,0 +1,10 @@
+Datos del proyecto
+
+App: wChat
+Version: 0.1
+
+Autor: Julian Jose Capeloni
+Fecha de creación: 07/09/2018
+Ubicación: Cordoba, Argentina
+
+Resumen: Es una app para chatear donde las personas se podrán pasar imágenes de memes creados dentro de la app. Y otros usuarios los podrán compartir.
