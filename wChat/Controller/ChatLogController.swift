@@ -24,8 +24,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         guard let uid = Auth.auth().currentUser?.uid else { return }
         guard let userIdChat = user?.id else { return }
         
-//        Estos son los cambios que hacen saltar un error
-//        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
         let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(userIdChat)
         
         userMessagesRef.observe(.childAdded, with: {(snapshot) in
@@ -40,13 +38,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 }
                 let message = Message(dictionary: dictionary)
                 
-                if message.chatPartnerId() == self.user?.id {
-                    self.messages.append(message)
+                self.messages.append(message)
                     
                     DispatchQueue.main.async {
                         self.collectionView?.reloadData()
                     }
-                }
                 
             }, withCancel: nil)
         }, withCancel: nil)
