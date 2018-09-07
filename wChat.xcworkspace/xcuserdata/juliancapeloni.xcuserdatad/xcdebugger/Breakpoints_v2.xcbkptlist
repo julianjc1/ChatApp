@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "wChat/Controller/LoginController+Handlers.swift"
+            timestampString = "557776496.2129869"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "handleRegister()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "wChat/Controller/LoginController+Handlers.swift"
+            timestampString = "557776496.213171"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "handleRegister()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__ObjC.AuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in wChat.LoginController.handleRegister() -&gt; ()"
+                  moduleName = "wChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/juliancapeloni/Google%20Drive/WProject/wChatV0/wChat/wChat/Controller/LoginController+Handlers.swift"
+                  timestampString = "557976073.509524"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "2753">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__ObjC.StorageMetadata&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__ObjC.AuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in wChat.LoginController.handleRegister() -&gt; ()"
+                  moduleName = "wChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/juliancapeloni/Google%20Drive/WProject/wChatV0/wChat/wChat/Controller/LoginController+Handlers.swift"
+                  timestampString = "557976073.512219"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "1041">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "wChat/AppDelegate.swift"
+            timestampString = "552761233.422444"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "AppDelegate"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "wChat.AppDelegate.__deallocating_deinit"
+                  moduleName = "wChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/juliancapeloni/Google%20Drive/WProject/wChatV0/wChat/wChat/AppDelegate.swift"
+                  timestampString = "552760188.537414"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "4">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "wChat.AppDelegate.__allocating_init() -&gt; wChat.AppDelegate"
+                  moduleName = "wChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/juliancapeloni/Google%20Drive/WProject/wChatV0/wChat/wChat/AppDelegate.swift"
+                  timestampString = "552760188.541082"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "4">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "wChat.AppDelegate.init() -&gt; wChat.AppDelegate"
+                  moduleName = "wChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/juliancapeloni/Google%20Drive/WProject/wChatV0/wChat/wChat/AppDelegate.swift"
+                  timestampString = "552760188.544368"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "16"
+                  endingLineNumber = "16"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "main"
+                  moduleName = "wChat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/juliancapeloni/Google%20Drive/WProject/wChatV0/wChat/wChat/AppDelegate.swift"
+                  timestampString = "552760188.546423"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "14"
+                  endingLineNumber = "14"
+                  offsetFromSymbolStart = "4">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
