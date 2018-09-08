@@ -42,13 +42,9 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                                 print(error as Any)
                             } else {
                                 guard let imageUrl = url?.absoluteString else { return }
-                                print(imageUrl)
                                 let values = ["name": username, "email": email, "password": pass, "profileImageUrl": imageUrl]
-                                //Crear usuarios con los datos Values
-                                print(values)
                                 self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
-                              
-                                print("es para ver donde se clava")
+                    
                             }
                         })
                     }}
@@ -77,7 +73,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     @objc func handleSelectImageProfile() {
-        print("camiar imagen")
         let picker = UIImagePickerController()
         
         picker.delegate = self
@@ -103,7 +98,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("Picker Cancell")
         dismiss(animated: true, completion: nil)
     }
     

@@ -35,7 +35,6 @@ class NewMessageController: UITableViewController {
             let user = Users(dictionary: dictionary!)
             user.id = snapshot.key
             self.users.append(user)
-           // print(user.name, user.email)
             DispatchQueue.main.async {
             
             //dispatch_async(dispatch_get_main_queue(), {
