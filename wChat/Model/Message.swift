@@ -15,6 +15,7 @@ class Message: NSObject {
     var text: String?
     var timeStamp: NSNumber?
     var toId: String?
+    var imageUrl: String?
    
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String ?? ""

@@ -158,6 +158,19 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 if let err = err {
                     print(err)
                 }
+                ref.downloadURL(completion: { (url, error) in
+                    if error != nil {
+                        print(error as Any)
+                    } else {
+                        guard let imageUrl = url?.absoluteString else { return }
+                        
+                        self.sendMessagesWithImageUrl(imageUrl: imageUrl)
+
+                        
+//                        let values = ["name": username, "email": email, "password": pass, "profileImageUrl": imageUrl]
+//                        self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+                    }
+                    })
           }
         }
     }
@@ -218,7 +231,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         setupCell(cell: cell, message: message)
         
-        cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: message.text!).width + 32
+        
+        if let text = message.text{
+        cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
+        }
             return cell
     }
     
@@ -284,4 +300,26 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         recipientUserMessageRef.updateChildValues([messageId: 1])
         
     }
+    
+    @objc func sendMessagesWithImageUrl(imageUrl: String) {
+        let ref = Database.database().reference().child("messages")
+        let childRef = ref.childByAutoId()
+        let toId = user!.id!
+        let fromId = Auth.auth().currentUser!.uid
+        let timestamp = NSDate().timeIntervalSince1970
+        let values = ["imgageUrl": imageUrl, "toId": toId, "fromId": fromId, "timeStamp": timestamp] as [String : Any]
+        childRef.updateChildValues(values)
+        
+        self.inputTextField.text = nil
+        
+        let messageId = childRef.key
+        
+        let userMessageRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
+        userMessageRef.updateChildValues([messageId: 1])
+        
+        let recipientUserMessageRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
+        recipientUserMessageRef.updateChildValues([messageId: 1])
+        
+    }
+    
 }
