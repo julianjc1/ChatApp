@@ -11,6 +11,8 @@ import Firebase
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
    
+    //Vamos a ver Julian
+    
     @objc func handleRegister() {
         
         //Traer datos del formulario de registro
