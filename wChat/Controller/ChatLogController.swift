@@ -235,6 +235,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if let text = message.text{
         cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
         }
+//        cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: message.text!).width + 32
             return cell
     }
     
@@ -242,6 +243,17 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
        
         if let profileImageUrl = self.user?.profileImageURL {
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+        }
+        
+        if let messageImageUrl = message.imageUrl {
+            cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
+            cell.messageImageView.isHidden = false
+            print("Esta seria la foto que deberia mostrar")
+            print(messageImageUrl)
+        } else {
+            cell.messageImageView.isHidden = true
+            print("Esto es por que no esta funcionando el IF")
+            print(message.imageUrl)
         }
         
         if message.fromId == Auth.auth().currentUser?.uid{
@@ -307,7 +319,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let toId = user!.id!
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = NSDate().timeIntervalSince1970
-        let values = ["imgageUrl": imageUrl, "toId": toId, "fromId": fromId, "timeStamp": timestamp] as [String : Any]
+        let values = ["imageUrl": imageUrl, "toId": toId, "fromId": fromId, "timeStamp": timestamp] as [String : Any]
         childRef.updateChildValues(values)
         
         self.inputTextField.text = nil

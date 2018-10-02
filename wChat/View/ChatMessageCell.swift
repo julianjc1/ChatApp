@@ -34,11 +34,20 @@ class ChatMessageCell: UICollectionViewCell {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "Ragnar")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let messageImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 16
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = UIColor.brown
         return imageView
     }()
     
@@ -53,6 +62,9 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(textView)
         addSubview(profileImageView)
         
+        bubbleView.addSubview(messageImageView)
+        
+        setupMessageImageView()
         setupBubbleView()
         setupTextView()
         setupProfileImageView()
@@ -85,5 +97,11 @@ class ChatMessageCell: UICollectionViewCell {
         profileImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
+    }
+    func setupMessageImageView(){
+        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 8).isActive = true
+        messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor, constant: 8).isActive = true
+        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor, constant: 8).isActive = true
     }
 }

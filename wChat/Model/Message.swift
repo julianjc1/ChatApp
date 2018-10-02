@@ -22,6 +22,7 @@ class Message: NSObject {
         self.text = dictionary["text"] as? String ?? ""
         self.timeStamp = dictionary["timeStamp"] as? NSNumber
         self.toId = dictionary["toId"] as? String ?? ""
+        self.imageUrl = dictionary["imageUrl"] as? String ?? ""
     }
     
     func chatPartnerId() -> String? {
