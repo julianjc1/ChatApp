@@ -18,13 +18,13 @@ class Message: NSObject {
     var imageUrl: String?
    
     init(dictionary: [String: Any]) {
-        self.fromId = dictionary["fromId"] as? String ?? ""
-        self.text = dictionary["text"] as? String ?? ""
+        self.fromId = dictionary["fromId"] as? String
+        self.text = dictionary["text"] as? String
         self.timeStamp = dictionary["timeStamp"] as? NSNumber
-        self.toId = dictionary["toId"] as? String ?? ""
-        self.imageUrl = dictionary["imageUrl"] as? String ?? ""
+        self.toId = dictionary["toId"] as? String
+        self.imageUrl = dictionary["imageUrl"] as? String
     }
-    
+ 
     func chatPartnerId() -> String? {
 //Metodo corto nuevo segun video, reemplaza al if de abajo
     return fromId == Auth.auth().currentUser?.uid ? toId : fromId
