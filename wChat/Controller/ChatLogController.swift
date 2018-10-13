@@ -248,12 +248,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if let messageImageUrl = message.imageUrl {
             cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
             cell.messageImageView.isHidden = false
-            print("Esta seria la foto que deberia mostrar")
-            print(messageImageUrl)
         } else {
             cell.messageImageView.isHidden = true
-            print("Esto es por que no esta funcionando el IF")
-            print(message.imageUrl)
         }
         
         if message.fromId == Auth.auth().currentUser?.uid{
