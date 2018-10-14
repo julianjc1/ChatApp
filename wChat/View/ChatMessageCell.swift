@@ -46,7 +46,7 @@ class ChatMessageCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -98,9 +98,9 @@ class ChatMessageCell: UICollectionViewCell {
         profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
     }
     func setupMessageImageView(){
-        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 8).isActive = true
+        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
         messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
-        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor, constant: 8).isActive = true
-        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor, constant: 8).isActive = true
+        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
+        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
     }
 }

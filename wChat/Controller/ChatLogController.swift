@@ -149,32 +149,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
     }
     
-    private func uploadToFirebaseStorageUsingImage(image: UIImage){
-        let imageName = NSUUID().uuidString
-        let ref = Storage.storage().reference().child("message_images").child(imageName)
-
-        if let uploadData = UIImageJPEGRepresentation(image, 0.2){
-            ref.putData(uploadData, metadata: nil) { (metadata, err) in
-                if let err = err {
-                    print(err)
-                }
-                ref.downloadURL(completion: { (url, error) in
-                    if error != nil {
-                        print(error as Any)
-                    } else {
-                        guard let imageUrl = url?.absoluteString else { return }
-                        
-                        self.sendMessagesWithImageUrl(imageUrl: imageUrl)
-
-                        
-//                        let values = ["name": username, "email": email, "password": pass, "profileImageUrl": imageUrl]
-//                        self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
-                    }
-                    })
-          }
-        }
-    }
-    
     override var inputAccessoryView: UIView? {
         get {
             return inputContainerView
@@ -234,6 +208,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         if let text = message.text{
         cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
+        } else if message.imageUrl != nil {
+            cell.bubbleWidthAnchor?.constant = 200
         }
 //        cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: message.text!).width + 32
             return cell
@@ -248,8 +224,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if let messageImageUrl = message.imageUrl {
             cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
             cell.messageImageView.isHidden = false
+            cell.bubbleView.backgroundColor = UIColor.clear
         } else {
             cell.messageImageView.isHidden = true
+
         }
         
         if message.fromId == Auth.auth().currentUser?.uid{
@@ -271,10 +249,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+       
         var height: CGFloat = 80
-        
-        if let text = messages [indexPath.item].text {
+        let message = messages [indexPath.item]
+        if let text = message.text {
             height = estimatedFrameForText(text: text).height + 20
+        } else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue {
+            height = CGFloat (imageHeight / imageWidth * 200)
         }
         
         return CGSize(width: view.frame.width, height: height)
@@ -288,34 +269,55 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     var containerViewBottomAnchor: NSLayoutConstraint?
     
-    @objc func handleSend() {
-        let ref = Database.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
-        let toId = user!.id!
-        let fromId = Auth.auth().currentUser!.uid
-        let timestamp = NSDate().timeIntervalSince1970
-        let values = ["text": inputTextField.text!, "toId": toId, "fromId": fromId, "timeStamp": timestamp] as [String : Any]
-        childRef.updateChildValues(values)
+    private func uploadToFirebaseStorageUsingImage(image: UIImage){
+        let imageName = NSUUID().uuidString
+        let ref = Storage.storage().reference().child("message_images").child(imageName)
         
-        self.inputTextField.text = nil
-        
-        let messageId = childRef.key
- 
-        let userMessageRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
-        userMessageRef.updateChildValues([messageId: 1])
-
-        let recipientUserMessageRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
-        recipientUserMessageRef.updateChildValues([messageId: 1])
-        
+        if let uploadData = UIImageJPEGRepresentation(image, 0.2){
+            ref.putData(uploadData, metadata: nil) { (metadata, err) in
+                if let err = err {
+                    print(err)
+                }
+                ref.downloadURL(completion: { (url, error) in
+                    if error != nil {
+                        print(error as Any)
+                    } else {
+                        guard let imageUrl = url?.absoluteString else { return }
+                        
+                        self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: image)
+                        
+                        
+                        //                        let values = ["name": username, "email": email, "password": pass, "profileImageUrl": imageUrl]
+                        //                        self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+                    }
+                })
+            }
+        }
     }
     
-    @objc func sendMessagesWithImageUrl(imageUrl: String) {
+    @objc func sendMessagesWithImageUrl(imageUrl: String, image: UIImage) {
+        let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
+        
+        sendMessageWithProperties(properties: properties)
+    }
+    
+    @objc func handleSend() {
+        
+        let properties: [String: AnyObject] = ["text": inputTextField.text! as AnyObject]
+        
+        sendMessageWithProperties(properties: properties)
+    }
+    
+    private func sendMessageWithProperties (properties: [String: AnyObject]){
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
         let toId = user!.id!
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = NSDate().timeIntervalSince1970
-        let values = ["imageUrl": imageUrl, "toId": toId, "fromId": fromId, "timeStamp": timestamp] as [String : Any]
+        var values: [String: AnyObject] = ["toId": toId as AnyObject, "fromId": fromId as AnyObject, "timeStamp": timestamp as AnyObject] //as [String : Any]
+        
+        properties.forEach({values[$0] = $1})
+        
         childRef.updateChildValues(values)
         
         self.inputTextField.text = nil
@@ -327,7 +329,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         let recipientUserMessageRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
         recipientUserMessageRef.updateChildValues([messageId: 1])
-        
     }
     
 }
