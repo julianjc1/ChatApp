@@ -212,6 +212,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         
+        cell.chatLogController = self
+        
         let message = messages[indexPath.item]
         cell.textView.text = message.text
         
@@ -219,9 +221,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         
         if let text = message.text{
-        cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
+            cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
+            cell.textView.isHidden = false
         } else if message.imageUrl != nil {
             cell.bubbleWidthAnchor?.constant = 200
+            cell.textView.isHidden = true
         }
 //        cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: message.text!).width + 32
             return cell
@@ -342,6 +346,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         let recipientUserMessageRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
         recipientUserMessageRef.updateChildValues([messageId: 1])
+    }
+    
+    //Custom Zoom In Logic
+    func performZoomInForStartingImageView(startingImageView: UIImageView){
+        print("funciona el performZoomInForStartingImageView")
     }
     
 }
