@@ -348,29 +348,67 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         recipientUserMessageRef.updateChildValues([messageId: 1])
     }
     
+    var startingFrame: CGRect?
+    var blackBackground: UIView?
+    var startingImageView: UIImageView?
+    
     //Custom Zoom In Logic
     func performZoomInForStartingImageView(startingImageView: UIImageView){
-        print("funciona el performZoomInForStartingImageView")
-        let startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
-        print(startingFrame)
+        
+        self.startingImageView = startingImageView
+        self.startingImageView?.isHidden = true
+        
+        startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
         
         let zoominImageView = UIImageView(frame: startingFrame!)
         zoominImageView.backgroundColor = UIColor.red
         zoominImageView.image = startingImageView.image
+        zoominImageView.isUserInteractionEnabled = true
+        zoominImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+        zoominImageView.layer.cornerRadius = 16
+        zoominImageView.clipsToBounds = true
         
         if let KeyWindow = UIApplication.shared.keyWindow {
+            
+            blackBackground = UIView(frame: KeyWindow.frame)
+            blackBackground?.backgroundColor = UIColor.black
+            blackBackground?.alpha = 0
+            
+            KeyWindow.addSubview(blackBackground!)
             KeyWindow.addSubview(zoominImageView)
             
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,
-            animations: {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 
-                let height = startingFrame!.height / startingFrame!.width * KeyWindow.frame.width
+                zoominImageView.layer.cornerRadius = 0
+                self.blackBackground?.alpha = 1
+                self.inputContainerView.alpha = 0
+                let height = self.startingFrame!.height / self.startingFrame!.width * KeyWindow.frame.width
                 
                 zoominImageView.frame = CGRect(x: 0, y: 0, width: KeyWindow.frame.width, height: height)
                 
                 zoominImageView.center = KeyWindow.center
                 
             }, completion: nil)
+        }
+    }
+    
+    @objc func handleZoomOut(tapGesture: UITapGestureRecognizer){
+        if let zooOutImageView = tapGesture.view{
+            zooOutImageView.layer.cornerRadius = 16
+            zooOutImageView.clipsToBounds = true
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                
+                zooOutImageView.frame = self.startingFrame!
+                self.blackBackground?.alpha = 0
+                self.inputContainerView.alpha = 1
+                
+            }, completion:{ (completed: Bool) in
+                //do something here later
+                zooOutImageView.removeFromSuperview()
+                self.startingImageView?.isHidden = false
+            })
+
         }
     }
     

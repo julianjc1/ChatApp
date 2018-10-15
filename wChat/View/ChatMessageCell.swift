@@ -20,7 +20,6 @@ class ChatMessageCell: UICollectionViewCell {
         tv.backgroundColor = UIColor.clear
         tv.textColor = UIColor.white
         tv.isEditable = false
-        tv.backgroundColor = UIColor.yellow
         return tv
     }()
 
