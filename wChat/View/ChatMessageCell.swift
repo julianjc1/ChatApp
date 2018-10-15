@@ -57,7 +57,7 @@ class ChatMessageCell: UICollectionViewCell {
     }()
     
     @objc func handleZoomTap (tapGesture: UITapGestureRecognizer) {
-        print("Se Agranda!")
+        
         if let imageView = tapGesture.view as? UIImageView {
         self.chatLogController?.performZoomInForStartingImageView(startingImageView: imageView)
         }

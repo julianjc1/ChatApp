@@ -351,6 +351,27 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     //Custom Zoom In Logic
     func performZoomInForStartingImageView(startingImageView: UIImageView){
         print("funciona el performZoomInForStartingImageView")
+        let startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
+        print(startingFrame)
+        
+        let zoominImageView = UIImageView(frame: startingFrame!)
+        zoominImageView.backgroundColor = UIColor.red
+        zoominImageView.image = startingImageView.image
+        
+        if let KeyWindow = UIApplication.shared.keyWindow {
+            KeyWindow.addSubview(zoominImageView)
+            
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut,
+            animations: {
+                
+                let height = startingFrame!.height / startingFrame!.width * KeyWindow.frame.width
+                
+                zoominImageView.frame = CGRect(x: 0, y: 0, width: KeyWindow.frame.width, height: height)
+                
+                zoominImageView.center = KeyWindow.center
+                
+            }, completion: nil)
+        }
     }
     
 }
