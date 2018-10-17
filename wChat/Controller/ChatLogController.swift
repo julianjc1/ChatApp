@@ -8,6 +8,9 @@
 
 import UIKit
 import Firebase
+import MobileCoreServices
+import AVFoundation
+
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
    
     var user: Users? {
@@ -129,6 +132,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true
+        imagePickerController.mediaTypes = [kUTTypeImage, kUTTypeMovie] as [String]
         present(imagePickerController, animated: true, completion: nil)
     }
     
@@ -138,8 +142,60 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
 
-        var selectedImageFromPricker: UIImage?
+        if let videoUrl = info[UIImagePickerControllerMediaURL] as? URL{
+            //as? NSURL{
+            handleVideSelectedFromUrl (url: videoUrl)
+        } else {
+            handleImageSelectedFromInfo(info: info as [String : AnyObject])
+        }
+      
+        dismiss(animated: true, completion: nil)
 
+    }
+    
+    private func handleVideSelectedFromUrl (url: URL){
+        //let fileName = "SomeName"
+        let fileName = UUID().uuidString + ".mov"
+        let ref = Storage.storage().reference().child("message_videos").child(fileName)
+        
+        let uploadTask = ref.putFile(from: url, metadata: nil) { (metadata, err) in
+            if let err = err {
+                print(err)
+            }
+            ref.downloadURL(completion: { (url, error) in
+                if error != nil {
+                    print(error as Any)
+                    return
+                } else {
+                    print("Se cargo el video")
+                    let thumbanulImage = thumbailImageForFileUrl(fileUrl: url)
+                    // guard let imageUrl = url?.absoluteString else { return }
+                    //self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: image)
+                    
+                }
+            })
+            
+        }
+        
+        uploadTask.observe(.progress) { (snapshot) in
+            if let comletedUnitCount = snapshot.progress?.completedUnitCount{
+                self.navigationItem.title = String(comletedUnitCount)
+            }
+        }
+        uploadTask.observe(.success) { (snapshot) in
+                self.navigationItem.title = self.user?.name
+        }
+    }
+    
+    private func thumbailImageForFileUrl(fileUrl: URL) -> UIImage {
+        
+    }
+    
+    
+    private func handleImageSelectedFromInfo (info: [String: AnyObject]) {
+        
+        var selectedImageFromPricker: UIImage?
+        
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             selectedImageFromPricker = editedImage
         } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
@@ -148,8 +204,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if let selectedImage = selectedImageFromPricker {
             uploadToFirebaseStorageUsingImage(image: selectedImage)
         }
-        dismiss(animated: true, completion: nil)
-
+        
     }
     
     override var inputAccessoryView: UIView? {
@@ -224,6 +279,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
             cell.textView.isHidden = false
         } else if message.imageUrl != nil {
+            cell.bubbleView.backgroundColor = UIColor.clear
             cell.bubbleWidthAnchor?.constant = 200
             cell.textView.isHidden = true
         }
@@ -301,15 +357,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                         guard let imageUrl = url?.absoluteString else { return }
                         
                         self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: image)
-                        
-                        
-                        //                        let values = ["name": username, "email": email, "password": pass, "profileImageUrl": imageUrl]
-                        //                        self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+                 
                     }
                 })
             }
         }
     }
+    
+    
     
     @objc func sendMessagesWithImageUrl(imageUrl: String, image: UIImage) {
         
@@ -361,7 +416,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
         
         let zoominImageView = UIImageView(frame: startingFrame!)
-        zoominImageView.backgroundColor = UIColor.red
         zoominImageView.image = startingImageView.image
         zoominImageView.isUserInteractionEnabled = true
         zoominImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
@@ -396,12 +450,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         if let zooOutImageView = tapGesture.view{
             zooOutImageView.layer.cornerRadius = 16
             zooOutImageView.clipsToBounds = true
+
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 
                 zooOutImageView.frame = self.startingFrame!
                 self.blackBackground?.alpha = 0
                 self.inputContainerView.alpha = 1
+
                 
             }, completion:{ (completed: Bool) in
                 //do something here later

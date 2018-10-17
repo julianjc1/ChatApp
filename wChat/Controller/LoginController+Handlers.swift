@@ -10,8 +10,6 @@ import UIKit
 import Firebase
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-   
-    //Vamos a ver Julian
     
     @objc func handleRegister() {
         
@@ -31,8 +29,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).png")
                 
                 //Traer la imagen cargada y reducir tamaño
-                //if let profileImage = self.imageProfile.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1) {
-                if let profileImage = self.imageProfile.image, let uploadData = UIImagePNGRepresentation(profileImage) {
+                if let profileImage = self.imageProfile.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1) {
+                //if let profileImage = self.imageProfile.image, let uploadData = UIImagePNGRepresentation(profileImage) {
                     //Colocar la imagen en Storage de Firabese
                      storageRef.putData(uploadData, metadata: nil) { (metadata, err) in
                         if let err = err {
@@ -50,7 +48,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                             }
                         })
                     }}
-                //self.dismiss(animated: false, completion: nil)
+                self.dismiss(animated: false, completion: nil)
             } else {
                 print("Error: \(error!.localizedDescription)")
             }
