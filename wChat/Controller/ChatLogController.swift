@@ -154,7 +154,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     private func handleVideSelectedFromUrl (url: URL){
-        //let fileName = "SomeName"
         let fileName = UUID().uuidString + ".mov"
         let ref = Storage.storage().reference().child("message_videos").child(fileName)
         
@@ -172,13 +171,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                     guard let videoUrl = url?.absoluteString else { return }
                     
                     if let thumbailImage = self.thumbailImageForFileUrl(fileUrl: url!) {
-                        let properties: [String: AnyObject] = ["imageWidth": thumbailImage.size.width as AnyObject, "imageHeight": thumbailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject]
-                        
-                        self.sendMessageWithProperties(properties: properties)
-                        
+                       
+                        self.uploadToFirebaseStorageUsingImage(image: thumbailImage, completion: { (imageUrl) in
+                            
+                            let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": thumbailImage.size.width as AnyObject, "imageHeight": thumbailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject]
+                            
+                            self.sendMessageWithProperties(properties: properties)
+                            
+                        })
+
                     }
-                    // guard let imageUrl = url?.absoluteString else { return }
-                    //self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: image)
                     
                 }
             })
@@ -226,7 +228,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             selectedImageFromPricker = originalImage
         }
         if let selectedImage = selectedImageFromPricker {
-            uploadToFirebaseStorageUsingImage(image: selectedImage)
+            uploadToFirebaseStorageUsingImage(image: selectedImage) { (imageUrl) in
+                self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: selectedImage)
+            }
+//            uploadToFirebaseStorageUsingImage(image: selectedImage)
         }
         
     }
@@ -365,7 +370,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     var containerViewBottomAnchor: NSLayoutConstraint?
     
-    private func uploadToFirebaseStorageUsingImage(image: UIImage){
+    private func uploadToFirebaseStorageUsingImage(image: UIImage, completion: @escaping (_ imageUrl: String) -> ()){
         let imageName = NSUUID().uuidString
         let ref = Storage.storage().reference().child("message_images").child(imageName)
         
@@ -379,8 +384,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                         print(error as Any)
                     } else {
                         guard let imageUrl = url?.absoluteString else { return }
-                        
-                        self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: image)
+                        completion(imageUrl)
+                        //self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: image)
                         
                     }
                 })
