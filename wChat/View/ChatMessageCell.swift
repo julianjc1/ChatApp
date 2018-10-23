@@ -7,11 +7,57 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ChatMessageCell: UICollectionViewCell {
     
     var chatLogController: ChatLogController?
-
+    var message: Message?
+    
+    let activityIndicatorView: UIActivityIndicatorView = {
+        let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        aiv.translatesAutoresizingMaskIntoConstraints = false
+        aiv.hidesWhenStopped = true
+        return aiv
+    }()
+    
+    lazy var playButton: UIButton = {
+        let button = UIButton(type: .system)
+        let image = UIImage(named: "play")
+        button.setImage(image, for: .normal)
+        button.tintColor = UIColor.white
+        
+        button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    var playerLayer: AVPlayerLayer?
+    var player: AVPlayer?
+    
+    @objc func handlePlay() {
+        if let videoUrlString = message?.videoUrl, let url = URL(string: videoUrlString){
+            player = AVPlayer(url: url)
+            
+            playerLayer = AVPlayerLayer(player: player!)
+            playerLayer?.frame = bubbleView.bounds
+            bubbleView.layer.addSublayer(playerLayer!)
+            
+            player?.play()
+            activityIndicatorView.startAnimating()
+            playButton.isHidden = true
+        }
+        
+        print("Play Video")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        playerLayer?.removeFromSuperlayer()
+        player?.pause()
+        activityIndicatorView.stopAnimating()
+    }
+    
     let textView: UITextView = {
         let tv = UITextView()
         tv.text = "SAMPLE TEXT FOR NOW"
@@ -56,7 +102,11 @@ class ChatMessageCell: UICollectionViewCell {
     }()
     
     @objc func handleZoomTap (tapGesture: UITapGestureRecognizer) {
-        
+        if message?.videoUrl != nil {
+            player?.pause()
+            playButton.isHidden = false
+            return
+        }
         if let imageView = tapGesture.view as? UIImageView {
         self.chatLogController?.performZoomInForStartingImageView(startingImageView: imageView)
         }
@@ -74,11 +124,16 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(profileImageView)
         
         bubbleView.addSubview(messageImageView)
+        bubbleView.addSubview(activityIndicatorView)
+        setupactivityIndicatorView()
+        bubbleView.addSubview(playButton)
         
         setupMessageImageView()
         setupBubbleView()
         setupTextView()
         setupProfileImageView()
+        setupPlayButton()
+        
     }
 
     required init?(coder aDecoder: NSCoder){
@@ -102,6 +157,18 @@ class ChatMessageCell: UICollectionViewCell {
         bubbleWidthAnchor = bubbleView.widthAnchor.constraint(equalToConstant: 200)
         bubbleWidthAnchor?.isActive = true
         bubbleView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+    }
+    func setupactivityIndicatorView(){
+        activityIndicatorView.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
+        activityIndicatorView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
+        activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    func setupPlayButton(){
+        playButton.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
+        playButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
+        playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     func setupProfileImageView(){
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
