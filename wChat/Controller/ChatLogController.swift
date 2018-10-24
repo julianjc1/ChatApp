@@ -68,9 +68,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //collectionView?.translatesAutoresizingMaskIntoConstraints = false
         collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        //        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
@@ -196,13 +194,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             self.navigationItem.title = self.user?.name
         }
     }
-    /*
-     @objc func sendMessagesWithImageUrl(imageUrl: String, image: UIImage) {
-     
-     let properties: [String: AnyObject] = ["imageUrl": imageUrl as AnyObject, "imageWidth": image.size.width as AnyObject, "imageHeight": image.size.height as AnyObject]
-     
-     sendMessageWithProperties(properties: properties)
-     }*/
     
     private func thumbailImageForFileUrl(fileUrl: URL) -> UIImage? {
         let asset = AVAsset(url: fileUrl)
@@ -231,7 +222,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             uploadToFirebaseStorageUsingImage(image: selectedImage) { (imageUrl) in
                 self.sendMessagesWithImageUrl(imageUrl: imageUrl, image: selectedImage)
             }
-//            uploadToFirebaseStorageUsingImage(image: selectedImage)
+
         }
         
     }
@@ -250,11 +241,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     func setupKeyboardObservers(){
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        
-        //        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        //
-        //        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        //
+    
     }
     
     @objc func handleKeyboardDidShow (){
@@ -410,10 +397,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     @objc func handleSend() {
-        
-        let properties: [String: AnyObject] = ["text": inputTextField.text! as AnyObject]
-        
-        sendMessageWithProperties(properties: properties)
+        //Esto es para evitar que se manden mensajes sin ningun texto
+        if inputTextField.text?.isEmpty ?? true {
+            return
+        }else{
+            let properties: [String: AnyObject] = ["text": inputTextField.text! as AnyObject]
+            sendMessageWithProperties(properties: properties)
+        }
     }
     
     private func sendMessageWithProperties (properties: [String: AnyObject]){
@@ -464,7 +454,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             blackBackground?.backgroundColor = UIColor.black
             blackBackground?.alpha = 0
             
-            KeyWindow.addSubview(blackBackground!)
+            //KeyWindow.addSubview(blackBackground!)
             KeyWindow.addSubview(zoominImageView)
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
